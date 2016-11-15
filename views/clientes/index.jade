@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  .span12
+    .widget-box
+      .widget-title
+        span.icon
+          i.icon-th
+        h5 Clientes con prestamos activos
+      .widget-content.nopadding
+        table.table.table-bordered.table-striped.data-table.dt-responsive.nowrap(style='overflow:hidden;')
+          thead
+            tr
+              th Nombre
+              th Tipo de Id
+              th Identificacion
+              th Direccion
+              th Celular
+              th Email
+              
+          tbody
+            each cliente in clientes
+              tr.gradeX(onclick='window.location="/app/clientes/#{cliente._id}"', style='cursor:pointer;')
+                td=cliente.name
+                td=cliente.tipo_id
+                td=cliente.identificacion
+                td=cliente.direccion
+                td=cliente.celular
+                td=cliente.email
+                
+  
+            

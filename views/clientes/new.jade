@@ -1,0 +1,121 @@
+extends ../layout
+
+block content
+
+  .span12
+        .widget-box
+          .widget-title
+            span.icon
+              i.icon-pencil
+            h5 Nuevo cliente
+          .widget-content.nopadding
+            form#form-wizard.form-horizontal(method='post')
+              
+              #form-wizard-1.step
+                  .control-group
+                    label.control-label Nombre Completo :
+                    .controls
+                      input.span8(type='text', placeholder='Nombre Completo', required='true', name='name')
+                  .control-group
+                    label.control-label Tipo de identificacion
+                    .controls
+                      select.span8( required='true', name='tipo_id')
+                        option(value='CC') Cedula de ciudadania
+                        option(value='CE') Cedula de extranjeria
+                  .control-group
+                    label.control-label Identificacion
+                    .controls
+                      input.span8(type='text', placeholder='Enter Password', required='true', name='identificacion')
+                  .control-group
+                    label.control-label Celular
+                    .controls
+                      input.span8#celular(type='number', placeholder='Celular', required='true', name='celular')
+                  .control-group
+                    label.control-label Correo electronico
+                    .controls
+                      input.span8(type='email',name='email', required='true')
+                      
+                  .control-group
+                    label.control-label Descripcion Persona
+                    .controls
+                      textarea.span8(name='descripcion')
+              #form-wizard-2.step
+                .control-group
+                  label.control-label Direccion :
+                  .controls
+                    input.span8#direccion-input(type='text', placeholder='Ejemplo Carrera 25 #32-12', name='direccion', required='true')
+
+                    span.btn.btn-success#form-direccion Buscar
+                .control-group#mapa-direccion(style='height:381px; width:100%;')
+
+              #form-wizard-3.step
+                .control-group
+                    label.control-label Valor a prestar
+                    .controls
+                      input.span8(type='number', placeholder='Valor a prestar', required='true', name='monto')
+                .control-group
+                    label.control-label Forma de pago
+                    .controls
+                      select.span8(required='true', name='tipo_plazo')
+                        each plazo in plazos
+                          option(value=plazo._id)=plazo.tipo_plazo
+                .control-group
+                    label.control-label Plazo
+                    .controls
+                      input.span4(type='number', placeholder='Plazo segun el tipo de plazo', required='true', name='plazo')
+              .form-actions
+                input#back.btn.btn-primary(type='reset', value='Atras', style='margin-right:1em;')
+                input#next.btn.btn-primary(type='submit', value='Siguiente')
+                #status
+              #submitted
+  script.
+    function initMap() {
+      // Create a map object and specify the DOM element for display.
+      var map = new google.maps.Map(document.getElementById('mapa-direccion'), {
+        center: {lat: -34.397, lng: 150.644},
+        scrollwheel: false,
+        zoom: 8
+      });
+      var geocoder = new google.maps.Geocoder();
+      var btn = document.getElementById('form-direccion')
+      btn.value=''
+      btn.addEventListener('click', function(e) {
+        geocodeAddress(geocoder, map);
+      });
+    }
+    function geocodeAddress(geocoder, resultsMap) {
+      var address = document.getElementById('direccion-input').value;
+      geocoder.geocode({'address': address}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          resultsMap.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+            map: resultsMap,
+            position: results[0].geometry.location,
+
+          });
+          resultsMap.setZoom(17);
+        } else {
+          alert('Esa direccion no fue encontrada ' + status);
+        }
+      });
+    }
+    document.getElementById('form-wizard').addEventListener('submit',function(e){
+      e.preventDefault()
+      var serializedData = $('#form-wizard').serialize();
+      $.ajax({
+          url: "/app/clientes",
+          type: "post",
+          data: serializedData,
+          success:function(data){
+            alert(data)
+          },
+          error:function(err){
+            alert('ERROR ',err)
+          }
+      });
+    })
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC29kT7B_aSG7jeJEvxNAwWzI1P5MFNNak&callback=initMap')
+
+
+        
+           

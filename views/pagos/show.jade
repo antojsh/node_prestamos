@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  .span6(style='margin-top:-10px;')
+    .widget-box
+      .widget-title
+        span.icon
+          i.icon-th
+        h5 Realizar Pago de #{plan.cliente.name}, pago  ideal #{plan.valor_a_pagar} 
+      .widget-content.nopadding
+        form#form-pago.form-horizontal(method='post', action='#', name='basic_validate')
+          .control-group
+            label.control-label Valor a cancelar
+            .controls
+              input(type='numer', name='valor_pagado', required='true')
+          .control-group
+            label.control-label Observacion
+            .controls
+              textarea#required(name='observacion')
+          .control-group
+            .controls
+              input.btn.btn-primary(type='submit',name='required', value='Realizar Pago')
+          .control-group
+            label(style='margin:5px;')=moment(plan.dia).format("LLLL")
+  script.
+    document.getElementById('form-pago').addEventListener('submit',function(e){
+      e.preventDefault()
+      var serializedData = $('#form-pago').serialize();
+      $.ajax({
+          url: "/app/pagos/#{plan._id}",
+          type: "put",
+          data: serializedData,
+          success:function(data){
+            alert(data)
+          },
+          error:function(err){
+            alert('ERROR ',err)
+          }
+      });
+    })

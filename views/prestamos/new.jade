@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  .span6
+    .widget-box
+      .widget-title
+        span.icon
+          i.icon-info-sign
+        h5 Nuevo prestamo
+      .widget-content.nopadding
+        form#basic_validate.form-horizontal(method='post', action='#', name='basic_validate', novalidate='novalidate')
+          .control-group
+            label.control-label Your Name
+            .controls
+              input#required(type='text', name='required')
+          .control-group
+            label.control-label Your Email
+            .controls
+              input#email(type='text', name='email')
+          .control-group
+            label.control-label Date (only Number)
+            .controls
+              input#date(type='text', name='date')
+          .control-group
+            label.control-label URL (Start with http://)
+            .controls
+              input#url(type='text', name='url')
+          .form-actions
+            input.btn.btn-success(type='submit', value='Validate')
+        
+        
+           

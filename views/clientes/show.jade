@@ -1,0 +1,89 @@
+extends ../layout
+
+block content
+  .span12(style='margin-top:-10px;')
+    .widget-box
+      .widget-title
+        span.icon
+          i.icon-th
+        h5=planes[0].cliente.name
+      .widget-content
+        .row-fluid(style='margin-top:0;')
+                  .span6
+                    table
+                      tbody
+                        tr
+                          td
+                            h4=planes[0].cliente.name
+                        tr
+                          td 
+                            strong Identificacion 
+                            =planes[0].cliente.identificacion
+                        tr
+                          td 
+                            strong Direccion 
+                            =planes[0].cliente.direccion
+                        tr
+                          td
+                            strong Celular 
+                            =planes[0].cliente.celular
+                        tr
+                          td
+                            strong Email 
+                            =planes[0].cliente.email
+                  .span6
+                    table.table.table-bordered.table-invoice
+                      tbody
+                        tr
+                        tr
+                          td.width30 Valor prestamo:
+                          td.width70
+                            strong $#{_str.numberFormat(planes[0].prestamo.monto + planes[0].prestamo.intereses, 0)}
+                        tr
+                          td Pagado Hasta Ahora:
+                          td
+                            strong $#{_str.numberFormat(planes[0].prestamo.pagado, 0)}
+                        tr
+                          td Falta por pagar
+                          td
+                            strong $#{_str.numberFormat((planes[0].prestamo.monto + planes[0].prestamo.intereses)-planes[0].prestamo.pagado, 0)}
+                        td.width30 Estado del prestamo
+                        td.width70
+                          span.date.badge.badge-important Atrasado
+                          
+                .row-fluid
+                  .span12
+                    table.table.table-bordered.table-invoice-full
+                      thead
+                        tr
+                          th Dia
+                          th.head1.right Valor a Pagar
+                          th.head1.right Pagado
+                          th.head0.text-right Estado de pago
+                          
+                      tbody
+                        each plan in planes
+                          tr(onclick='window.location="/app/pagos/#{plan._id}"')
+                            td=moment(plan.dia).format("LLLL")
+                            td $#{_str.numberFormat(plan.valor_a_pagar, 2)}
+                            td $#{_str.numberFormat(plan.valor_pagado, 2)}
+                            if plan.status =='Pendiente'
+                              td
+                                span.date.badge.badge-info=plan.status
+                            else if plan.status =='Pagado'
+                              td
+                                span.date.badge.badge-success=plan.status
+                            else if plan.status =='Incompleto'
+                              td
+                                span.date.badge.badge-warning=plan.status
+                            else if plan.status =='Atrasado'
+                              td
+                                span.date.badge.badge-important=plan.status
+
+                            //- if moment(plan.dia).get(unit) < moment('2016-11-17').get(unit) &&
+
+
+                            
+                    
+  
+            

@@ -1,0 +1,73 @@
+//- extends layout
+
+//- block content
+//-   h1= title
+//-   p Welcome to #{title}
+doctype html
+html(lang='en')
+  head
+    title Matrix Admin
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/stylesheets/matrix-login.css')
+    link(href="/font-awesome/css/font-awesome.css", rel="stylesheet")
+    
+  body
+    #loginbox
+      form#loginform.form-vertical(action='/singin', method='post')
+        .control-group.normal_text
+          h3
+            img(src='/images/logo.png', alt='Logo')
+        .control-group
+          .controls
+            .main_input_box
+              span.add-on.bg_lg
+                i.icon-user  
+              input(type='text', placeholder='Nombre Completo', name='name')
+        .control-group
+          .controls
+            .main_input_box
+              span.add-on.bg_lg
+                i.icon-user  
+              input(type='text', placeholder='Usuario', name='user')
+        .control-group
+          .controls
+            .main_input_box
+              span.add-on.bg_lg
+                i.icon-user  
+              input(type='email', placeholder='Email', name='email')
+        .control-group
+          .controls
+            .main_input_box
+              span.add-on.bg_ly
+                i.icon-lock
+              input(type='password', placeholder='Contraseña', name='password')
+        .control-group
+          .controls
+            .main_input_box
+              span.add-on.bg_ly
+                i.icon-lock
+              input(type='password', placeholder='Validar Contraseña', name='password_confirmation')
+        .form-actions
+          span.pull-left
+            a#to-recover.flip-link.btn.btn-info(href='/') Iniciar sesion
+          span.pull-right
+            input.btn.btn-success(type='submit', value='Registrarse')
+      form#recoverform.form-vertical(action='#')
+        p.normal_text
+          | Enter your e-mail address below and we will send you instructions how to recover a password.
+        .controls
+          .main_input_box
+            span.add-on.bg_lo
+              i.icon-envelope
+            input(type='text', placeholder='E-mail address')
+        .form-actions
+          span.pull-left
+            a#to-login.flip-link.btn.btn-success(href='#') « Back to login
+          span.pull-right
+            a.btn.btn-info Reecover
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/matrix.login.js')
+
