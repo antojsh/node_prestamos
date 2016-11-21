@@ -1,32 +1,82 @@
 extends ../layout
 
 block content
-  .span6
-    .widget-box
-      .widget-title
-        span.icon
-          i.icon-info-sign
-        h5 Nuevo prestamo
-      .widget-content.nopadding
-        form#basic_validate.form-horizontal(method='post', action='#', name='basic_validate', novalidate='novalidate')
-          .control-group
-            label.control-label Your Name
-            .controls
-              input#required(type='text', name='required')
-          .control-group
-            label.control-label Your Email
-            .controls
-              input#email(type='text', name='email')
-          .control-group
-            label.control-label Date (only Number)
-            .controls
-              input#date(type='text', name='date')
-          .control-group
-            label.control-label URL (Start with http://)
-            .controls
-              input#url(type='text', name='url')
-          .form-actions
-            input.btn.btn-success(type='submit', value='Validate')
+  
+  .wrapper.wrapper-content.animated.fadeInRight
+    .row
+      .col-lg-8
+        .ibox.float-e-margins
+          .ibox-title
+            h5
+              | Nuevo Prestamo 
+              
+            .ibox-tools
+              a.collapse-link
+                i.fa.fa-chevron-up
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                i.fa.fa-wrench
+              ul.dropdown-menu.dropdown-user
+                li
+                  a(href='#') Config option 1
+                li
+                  a(href='#') Config option 2
+              a.close-link
+                i.fa.fa-times
+          .ibox-content
+            form#form-prestamos.form-horizontal
+              .form-group
+                label.col-sm-2.control-label Cliente
+                .col-sm-10
+                  select.form-control.m-b(name='cliente',required='true')
+                   each cliente in clientes
+                     option(value=cliente._id)=cliente.name
+
+              .hr-line-dashed
+              .form-group
+                label.col-sm-2.control-label Valor a prestar
+                .col-sm-10
+                  input.form-control(type='number', name='monto',required='true')
+                  
+              .hr-line-dashed
+              .form-group
+                label.col-sm-2.control-label Forma de pago
+                .col-sm-10
+                   select.form-control.m-b(name='tipo_plazo',required='true')
+                     each plazo in plazos
+                       option(value=plazo._id)=plazo.tipo_plazo
+              .hr-line-dashed
+              .form-group
+                label.col-sm-2.control-label Plazo
+                .col-sm-10
+                  input.form-control(type='number', placeholder='Plazo', name='plazo',required='true')
+                  span.help-block.m-b-none Digite el numero de Dias, Semanas, Quincenas o Meses segun la forma de pago escogida
+              .hr-line-dashed
+              .form-group
+                .col-sm-4.col-sm-offset-2
+                  input.btn.btn-primary(type='submit',value='Guardar Prestamo') 
+    script.
+      window.addEventListener('load',function(){
+
+        document.getElementById('form-prestamos').addEventListener('submit',function(e){
+          e.preventDefault();
+          var serializedData = $('#form-prestamos').serialize();
+          $.ajax({
+              url: "/app/prestamos",
+              type: "post",
+              data: serializedData,
+              success:function(data){
+                if(!data.success){
+                  swal("Valla", data.message, "error")
+                }else{
+                  swal("Perfecto", data.message, "success")
+                  window.location='/app/clientes'
+                }
+              },
+              error:function(err){
+                alert('ERROR ',err)
+              }
+          });
+        },false)
         
-        
-           
+      })
+              

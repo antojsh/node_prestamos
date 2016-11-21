@@ -1,75 +1,141 @@
 extends ../layout
 
 block content
-
-  .span12
-        .widget-box
-          .widget-title
-            span.icon
-              i.icon-pencil
-            h5 Nuevo cliente
-          .widget-content.nopadding
-            form#form-wizard.form-horizontal(method='post')
-              
-              #form-wizard-1.step
-                  .control-group
-                    label.control-label Nombre Completo :
-                    .controls
-                      input.span8(type='text', placeholder='Nombre Completo', required='true', name='name')
-                  .control-group
-                    label.control-label Tipo de identificacion
-                    .controls
-                      select.span8( required='true', name='tipo_id')
-                        option(value='CC') Cedula de ciudadania
-                        option(value='CE') Cedula de extranjeria
-                  .control-group
-                    label.control-label Identificacion
-                    .controls
-                      input.span8(type='text', placeholder='Enter Password', required='true', name='identificacion')
-                  .control-group
-                    label.control-label Celular
-                    .controls
-                      input.span8#celular(type='number', placeholder='Celular', required='true', name='celular')
-                  .control-group
-                    label.control-label Correo electronico
-                    .controls
-                      input.span8(type='email',name='email', required='true')
-                      
-                  .control-group
-                    label.control-label Descripcion Persona
-                    .controls
-                      textarea.span8(name='descripcion')
-              #form-wizard-2.step
-                .control-group
-                  label.control-label Direccion :
-                  .controls
-                    input.span8#direccion-input(type='text', placeholder='Ejemplo Carrera 25 #32-12', name='direccion', required='true')
-
-                    span.btn.btn-success#form-direccion Buscar
-                .control-group#mapa-direccion(style='height:381px; width:100%;')
-
-              #form-wizard-3.step
-                .control-group
-                    label.control-label Valor a prestar
-                    .controls
-                      input.span8(type='number', placeholder='Valor a prestar', required='true', name='monto')
-                .control-group
-                    label.control-label Forma de pago
-                    .controls
-                      select.span8(required='true', name='tipo_plazo')
+  .wrapper.wrapper-content.animated.fadeInRight
+    .row
+      .col-lg-12
+        .ibox
+          .ibox-title
+            h5 Creacion de clientes
+            .ibox-tools
+              a.collapse-link
+                i.fa.fa-chevron-up
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                i.fa.fa-wrench
+              ul.dropdown-menu.dropdown-user
+                li
+                  a(href='#') Config option 1
+                li
+                  a(href='#') Config option 2
+              a.close-link
+                i.fa.fa-times
+          .ibox-content
+            
+            form#form.wizard-big
+              h1 Cliente
+              fieldset
+                
+                .row
+                  .col-lg-8
+                    .form-group
+                      label Nombre Completo *
+                      input.form-control.required(name='name', type='text')
+                    .form-group
+                      label Tipo de identificacion *
+                      input.form-control.required(name='tipo_id', type='text')
+                    .form-group
+                      label Identificacion *
+                      input.form-control.required(name='identificacion', type='number')
+                    .form-group
+                      label Celular *
+                      input.form-control.required(name='celular', type='number')
+                    .form-group
+                      label Correo electronico *
+                      input.form-control.required(name='email', type='email')
+                  .col-lg-4
+                    .text-center
+                      div(style='margin-top: 20px')
+                        i.fa.fa-user(style='font-size: 180px;color: #e5e5e5 ')
+              h1 Direccion
+              fieldset
+                
+                .row
+                  .col-lg-12
+                    .input-group
+                          input#name.form-control.required(name='direccion', type='text',placeholder='Direccion')
+                          span.input-group-btn
+                            button.btn.btn-primary(type='button')
+                              | Go!
+                        
+                    #mapa-direccion(style='height:300px; margin-top:5px;')
+                    
+              h1 Prestamo
+              fieldset
+                .row
+                  .col-lg-8
+                    .form-group
+                      label Valor a prestar *
+                      input.form-control.required(name='monto', type='number')
+                    .form-group
+                      label Forma de pago *
+                      select.form-control.required(required='true', name='tipo_plazo')
                         each plazo in plazos
                           option(value=plazo._id)=plazo.tipo_plazo
-                .control-group
-                    label.control-label Plazo
-                    .controls
-                      input.span4(type='number', placeholder='Plazo segun el tipo de plazo', required='true', name='plazo')
-              .form-actions
-                input#back.btn.btn-primary(type='reset', value='Atras', style='margin-right:1em;')
-                input#next.btn.btn-primary(type='submit', value='Siguiente')
-                #status
-              #submitted
+                    .form-group
+                      label Plazo *
+                      input.form-control.required(name='plazo', type='number')
+                    
   script.
+    window.addEventListener('load',initMap)
     function initMap() {
+      $("#wizard").steps();
+      $("#form").steps({
+          bodyTag: "fieldset",
+          onStepChanging: function(event, currentIndex, newIndex) {
+              // Always allow going backward even if the current step contains invalid fields!
+              if (currentIndex > newIndex) {
+                  return true;
+              }
+              // Forbid suppressing "Warning" step if the user is to young
+              if (newIndex === 3 && Number($("#age").val()) < 18) {
+                  return false;
+              }
+              var form = $(this);
+              // Clean up if user went backward before
+              if (currentIndex < newIndex) {
+                  // To remove error styles
+                  $(".body:eq(" + newIndex + ") label.error", form).remove();
+                  $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+              }
+              // Disable validation on fields that are disabled or hidden.
+              form.validate().settings.ignore = ":disabled,:hidden";
+              // Start validation; Prevent going forward if false
+              return form.valid();
+          },
+          onStepChanged: function(event, currentIndex, priorIndex) {
+              // Suppress (skip) "Warning" step if the user is old enough.
+              if (currentIndex === 2 && Number($("#age").val()) >= 18) {
+                  $(this).steps("next");
+              }
+              // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+              if (currentIndex === 2 && priorIndex === 3) {
+                  $(this).steps("previous");
+              }
+          },
+          onFinishing: function(event, currentIndex) {
+              var form = $(this);
+              // Disable validation on fields that are disabled.
+              // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+              form.validate().settings.ignore = ":disabled";
+              // Start validation; Prevent form submission if false
+              return form.valid();
+          },
+          onFinished: function(event, currentIndex) {
+              var form = $(this);
+              // Submit form input
+              form.submit();
+          }
+      }).validate({
+          errorPlacement: function(error, element) {
+              element.before(error);
+          },
+          rules: {
+              confirm: {
+                  equalTo: "#password"
+              }
+          }
+      });
+
       // Create a map object and specify the DOM element for display.
       var map = new google.maps.Map(document.getElementById('mapa-direccion'), {
         center: {lat: -34.397, lng: 150.644},
@@ -77,11 +143,29 @@ block content
         zoom: 8
       });
       var geocoder = new google.maps.Geocoder();
-      var btn = document.getElementById('form-direccion')
-      btn.value=''
-      btn.addEventListener('click', function(e) {
-        geocodeAddress(geocoder, map);
-      });
+      //- var form = document.getElementById('direccion-form')
+      //- //- btn.value=''
+      //- form.addEventListener('click', function(e) {
+      //-   geocodeAddress(geocoder, map);
+      //- });
+      var form = $('#form')
+      form.off('submit')
+      form.on('submit',function(e){
+        e.preventDefault()
+          alert('Hola')
+        var serializedData = $('#form').serialize();
+        $.ajax({
+            url: "/app/clientes",
+            type: "post",
+            data: serializedData,
+            success:function(data){
+              alert(data)
+            },
+            error:function(err){
+              alert('ERROR ',err)
+            }
+        });
+      })
     }
     function geocodeAddress(geocoder, resultsMap) {
       var address = document.getElementById('direccion-input').value;
@@ -99,23 +183,9 @@ block content
         }
       });
     }
-    document.getElementById('form-wizard').addEventListener('submit',function(e){
-      e.preventDefault()
-      var serializedData = $('#form-wizard').serialize();
-      $.ajax({
-          url: "/app/clientes",
-          type: "post",
-          data: serializedData,
-          success:function(data){
-            alert(data)
-          },
-          error:function(err){
-            alert('ERROR ',err)
-          }
-      });
-    })
-  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC29kT7B_aSG7jeJEvxNAwWzI1P5MFNNak&callback=initMap')
+    
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC29kT7B_aSG7jeJEvxNAwWzI1P5MFNNak')
+       
 
-
-        
-           
+          
+             

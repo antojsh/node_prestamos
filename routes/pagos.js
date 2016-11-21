@@ -24,7 +24,7 @@ router.route('/:id')
             .populate('prestamo')
             .exec(function(err, plan) {
                 plan.valor_pagado = parseInt(plan.valor_pagado) + parseInt(req.body.valor_pagado)
-                plan.observacion = req.body.observacion
+                
                 if (plan.valor_pagado == 0) {
                     plan.status = 'Atrasado'
                 } else if (plan.valor_a_pagar > plan.valor_pagado) {
@@ -45,9 +45,9 @@ router.route('/:id')
                                 prestamo.pagado = prestamo.pagado + plan.valor_pagado
                                 prestamo.save(function(err_save) {
                                     if (err_save) {
-                                        res.send('Error ' + err_save)
+                                        res.send({'success':false,'message':'Error realizando el pago'})
                                     } else {
-                                        res.send(plan)
+                                        res.send({'success':true,'message':'Pago realizado correctamente'})
                                     }
                                 })
                             }

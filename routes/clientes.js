@@ -20,12 +20,13 @@ router.get('/new', function(req, res, next) {
 router.route('/:id')
     .get(function(req, res) {
         Prestamos.findOne({ cliente: req.params.id, active: true }, function(err, prestamo) {
+            console.log(prestamo)
             Plan_pago.find({ cliente: req.params.id, prestamo: prestamo })
                 .populate('cliente')
                 .populate('prestamo')
                 .exec(function(err, plan) {
-                    console.log(plan)
-                    res.render('../views/clientes/show', { planes: plan });
+                    console.log(plan,' MIERDA')
+                    res.render('../views/clientes/show', { planes: plan, grafica:JSON.stringify(plan) });
                 })
         })
 

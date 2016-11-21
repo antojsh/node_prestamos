@@ -1,216 +1,226 @@
 doctype html
-html(lang='en')
+html
   head
-    title Matrix Admin
-    meta(charset='UTF-8')
+    meta(charset='utf-8')
+    base(href="/")
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
-    link(rel='stylesheet', href='/stylesheets/uniform.css')
-    link(rel='stylesheet', href='/stylesheets/select2.css')
-    link(rel='stylesheet', href='/stylesheets/matrix-style.css')
-    link(rel='stylesheet', href='/stylesheets/matrix-media.css')
-    link(href="/font-awesome/css/font-awesome.css", rel="stylesheet")
-    link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800', rel='stylesheet', type='text/css')
-    link(rel="stylesheet", href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.bootstrap.min.css")
-    link(rel="stylesheet", href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css")
-    link(rel="stylesheet", href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.bootstrap.min.css")
-
-
-    
+    title INSPINIA | Invoice
+    link(href='css/bootstrap.min.css', rel='stylesheet')
+    link(href='font-awesome/css/font-awesome.css', rel='stylesheet')
+    link(href='css/plugins/steps/jquery.steps.css', rel='stylesheet')
+    link(href='css/animate.css', rel='stylesheet')
+    link(href='css/style.css', rel='stylesheet')
+    link(rel="stylesheet", href="css/plugins/footable/footable.core.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css")
+    style.
+      body.DTTT_Print {
+      background: #fff;
+      }
+      .DTTT_Print #page-wrapper {
+      margin: 0;
+      background:#fff;
+      }
+      button.DTTT_button, div.DTTT_button, a.DTTT_button {
+      border: 1px solid #e7eaec;
+      background: #fff;
+      color: #676a6c;
+      box-shadow: none;
+      padding: 6px 8px;
+      }
+      button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
+      border: 1px solid #d2d2d2;
+      background: #fff;
+      color: #676a6c;
+      box-shadow: none;
+      padding: 6px 8px;
+      }
+      .dataTables_filter label {
+      margin-right: 5px;
+      }
   body
-    // Header-part
-    #header
-      h1
-        a(href='dashboard.html') Matrix Admin
-    // close-Header-part
-    // top-Header-menu
-    #user-nav.navbar.navbar-inverse
-      ul.nav
-        li#profile-messages.dropdown
-          a.dropdown-toggle(title='', href='#', data-toggle='dropdown', data-target='#profile-messages')
-            i.icon.icon-user
-            span.text  Antonio
-            b.caret
-          ul.dropdown-menu
+    #wrapper
+      nav.navbar-default.navbar-static-side(role='navigation')
+        .sidebar-collapse
+          ul#side-menu.nav
+            li.nav-header
+              .dropdown.profile-element
+                span
+                  img.img-circle(alt='image', src='img/profile_small.jpg')
+                a.dropdown-toggle(data-toggle='dropdown', href='#')
+                  span.clear
+                    span.block.m-t-xs
+                      strong.font-bold David Williams
+                    span.text-muted.text-xs.block
+                      | Art Director 
+                      b.caret
+                ul.dropdown-menu.animated.fadeInRight.m-t-xs
+                  li
+                    a(href='profile.html') Profile
+                  li
+                    a(href='contacts.html') Contacts
+                  li
+                    a(href='mailbox.html') Mailbox
+                  li.divider
+                  li
+                    a(href='login.html') Logout
+              .logo-element
+                | IN+
             li
-              a(href='#')
-                i.icon-user
-                |  My Profile
-            li.divider
+              a(href='/app/dashboard')
+                i.fa.fa-list
+                span.nav-label Ruta de hoy
             li
-              a(href='#')
-                i.icon-check
-                |  My Tasks
-            li.divider
+              a(href='index.html')
+                i.fa.fa-user
+                span.nav-label Clientes
+                span.fa.arrow
+              ul.nav.nav-second-level
+                li
+                  a(href='/app/clientes') Ver Clientes
+                li
+                  a(href='/app/clientes/new') Crear Cliente
             li
-              a(href='login.html')
-                i.icon-key
-                |  Log Out
-        li#menu-messages.dropdown
-          a.dropdown-toggle(href='#', data-toggle='dropdown', data-target='#menu-messages')
-            i.icon.icon-envelope
-            span.text Messages
-            span.label.label-important 5
-            b.caret
-          ul.dropdown-menu
-            li
-              a.sAdd(title='', href='#')
-                i.icon-plus
-                |  new message
-            li.divider
-            li
-              a.sInbox(title='', href='#')
-                i.icon-envelope
-                |  inbox
-            li.divider
-            li
-              a.sOutbox(title='', href='#')
-                i.icon-arrow-up
-                |  outbox
-            li.divider
-            li
-              a.sTrash(title='', href='#')
-                i.icon-trash
-                |  trash
-        li
-          a(title='', href='#')
-            i.icon.icon-cog
-            span.text Settings
-        li
-          a(title='', href='login.html')
-            i.icon.icon-share-alt
-            span.text Logout
-    // start-top-serch
-    #search
-      input(type='text', placeholder='Search here...')
-      button.tip-bottom(type='submit', title='Search')
-        i.icon-search.icon-white
-    // close-top-serch
-    // sidebar-menu
-    #sidebar
-      a.visible-phone(href='#')
-        i.icon.icon-tint
-        | Buttons & icons
-      ul
-        li.active
-          a(href='/app/dashboard')
-            i.icon.icon-home
-            span Dashboard
-        li
-          a(href='charts.html')
-            i.icon.icon-signal
-            span Charts & graphs
-        li
-          a(href='widgets.html')
-            i.icon.icon-inbox
-            span Widgets
-        li
-          a(href='tables.html')
-            i.icon.icon-th
-            span Tables
-        li
-          a(href='grid.html')
-            i.icon.icon-fullscreen
-            span Full width
-        li.submenu
-          a(href='#')
-            i.icon.icon-list
-            span Forms
-            span.label.label-important 3
-          ul
-            li
-              a(href='form-common.html') Basic Form
-            li
-              a(href='form-validation.html') Form with Validation
-            li
-              a(href='form-wizard.html') Form with Wizard
-        li
-          a(href='buttons.html')
-            i.icon.icon-tint
-            span Buttons & icons
-        li
-          a(href='interface.html')
-            i.icon.icon-pencil
-            span Eelements
-        li.submenu
-          a(href='#')
-            i.icon.icon-file
-            span Addons
-            span.label.label-important 5
-          ul
-            li
-              a(href='index2.html') Dashboard2
-            li
-              a(href='gallery.html') Gallery
-            li
-              a(href='calendar.html') Calendar
-            li
-              a(href='invoice.html') Invoice
-            li
-              a(href='chat.html') Chat option
-        li.submenu
-          a(href='#')
-            i.icon.icon-info-sign
-            span Error
-            span.label.label-important 4
-          ul
-            li
-              a(href='error403.html') Error 403
-            li
-              a(href='error404.html') Error 404
-            li
-              a(href='error405.html') Error 405
-            li
-              a(href='error500.html') Error 500
-        li.content
-          span Monthly Bandwidth Transfer
-          .progress.progress-mini.progress-danger.active.progress-striped
-            .bar(style='width: 77%;')
-          span.percent 77%
-          .stat 21419.94 / 14000 MB
-        li.content
-          span Disk Space Usage
-          .progress.progress-mini.active.progress-striped
-            .bar(style='width: 87%;')
-          span.percent 87%
-          .stat 604.44 / 4000 MB
-    // main-container-part
-    #content
-      #content-header
-        //- #breadcrumb
-        //-   a.tip-bottom(href='#', title='Go to Home')
-        //-     i.icon-home
-        //-     |  Home
-        //-   a.current(href='#') Buttons & icons
-        //- h1 Buttons & icons
-      .container-fluid
-        .row-fluid(style='margin-top:0;')
-          block content
-    .row-fluid
-      #footer.span12
-        | 2013 © Matrix Admin. Brought to you by 
-        a(href='http://themedesigner.in') Themedesigner.in
-    // end-Footer-part
-    // end-Footer-part
-  script(src='/javascripts/jquery.min.js')
-  script(src='/javascripts/jquery.ui.custom.js')
-  script(src='/javascripts/bootstrap.min.js')
-  script(src='/javascripts/jquery.validate.js')
-  script(src='/javascripts/jquery.wizard.js')
-  script(src='/javascripts/matrix.js')
-  script(src='/javascripts/matrix.wizard.js')
-  script(src='https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js')
-  script(src='https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js')
-  script(src='https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js')
+              a(href='index.html')
+                i.fa.fa-money
+                span.nav-label Prestamos
+                span.fa.arrow
+              ul.nav.nav-second-level
+                li
+                  a(href='/app/prestamos') Ver Prestamos
+                li
+                  a(href='/app/prestamos/new') Crear Prestamos
+            
+      #page-wrapper.gray-bg
+        .row.border-bottom
+          nav.navbar.navbar-static-top(role='navigation', style='margin-bottom: 0')
+            .navbar-header
+              a.navbar-minimalize.minimalize-styl-2.btn.btn-primary
+                i.fa.fa-bars
+              form.navbar-form-custom(role='search', method='post', action='search_results.html')
+                .form-group
+                  input#top-search.form-control(type='text', placeholder='Search for something...', name='top-search')
+            ul.nav.navbar-top-links.navbar-right
+              
+              li.dropdown
+                a.dropdown-toggle.count-info(data-toggle='dropdown', href='#')
+                  i.fa.fa-envelope
+                  span.label.label-warning 16
+                ul.dropdown-menu.dropdown-messages
+                  li
+                    .dropdown-messages-box
+                      a.pull-left(href='profile.html')
+                        img.img-circle(alt='image', src='img/a7.jpg')
+                      .media-body
+                        small.pull-right 46h ago
+                        strong Mike Loreipsum
+                        |  started following 
+                        strong Monica Smith
+                        | . 
+                        br
+                        small.text-muted 3 days ago at 7:58 pm - 10.06.2014
+                  li.divider
+                  li
+                    .dropdown-messages-box
+                      a.pull-left(href='profile.html')
+                        img.img-circle(alt='image', src='img/a4.jpg')
+                      .media-body
+                        small.pull-right.text-navy 5h ago
+                        strong Chris Johnatan Overtunk
+                        |  started following 
+                        strong Monica Smith
+                        | . 
+                        br
+                        small.text-muted Yesterday 1:21 pm - 11.06.2014
+                  li.divider
+                  li
+                    .dropdown-messages-box
+                      a.pull-left(href='profile.html')
+                        img.img-circle(alt='image', src='img/profile.jpg')
+                      .media-body
+                        small.pull-right 23h ago
+                        strong Monica Smith
+                        |  love 
+                        strong Kim Smith
+                        | . 
+                        br
+                        small.text-muted 2 days ago at 2:30 am - 11.06.2014
+                  li.divider
+                  li
+                    .text-center.link-block
+                      a(href='mailbox.html')
+                        i.fa.fa-envelope
+                        strong Read All Messages
+              li.dropdown
+                a.dropdown-toggle.count-info(data-toggle='dropdown', href='#')
+                  i.fa.fa-bell
+                  span.label.label-primary 8
+                ul.dropdown-menu.dropdown-alerts
+                  li
+                    a(href='mailbox.html')
+                      div
+                        i.fa.fa-envelope.fa-fw
+                        |  You have 16 messages
+                        span.pull-right.text-muted.small 4 minutes ago
+                  li.divider
+                  li
+                    a(href='profile.html')
+                      div
+                        i.fa.fa-twitter.fa-fw
+                        |  3 New Followers
+                        span.pull-right.text-muted.small 12 minutes ago
+                  li.divider
+                  li
+                    a(href='grid_options.html')
+                      div
+                        i.fa.fa-upload.fa-fw
+                        |  Server Rebooted
+                        span.pull-right.text-muted.small 4 minutes ago
+                  li.divider
+                  li
+                    .text-center.link-block
+                      a(href='notifications.html')
+                        strong See All Alerts
+                        i.fa.fa-angle-right
+              li
+                a(href='login.html')
+                  i.fa.fa-sign-out
+                  |  Cerrar Sesion
+        block content
+    script(src='js/jquery-2.1.1.js')
+    script(src='js/bootstrap.min.js')
+    script(src='js/plugins/metisMenu/jquery.metisMenu.js')
+    script(src='js/plugins/slimscroll/jquery.slimscroll.min.js')
+    // Custom and plugin javascript
+    script(src='js/inspinia.js')
+    script(src='js/plugins/pace/pace.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js')
 
-  script(src='https://cdn.datatables.net/responsive/2.1.0/js/responsive.bootstrap.min.js')
-  script(src='/javascripts/matrix.js')
-  script(src='/javascripts/jquery.uniform.js')
-  script(src='/javascripts/select2.min.js')
-  script(src='/javascripts/matrix.tables.js')
 
-  //- script.
-  //-   $('.data-table').DataTable({
-  //-     responsive: true
-  //-   })
+   
+    script(src='js/plugins/staps/jquery.steps.min.js')
+    // Jquery Validate
+    script(src='js/plugins/validate/jquery.validate.min.js')
+    script(src='js/plugins/dataTables/jquery.dataTables.js')
+    script(src='js/plugins/dataTables/dataTables.bootstrap.js')
+    script(src='js/plugins/dataTables/dataTables.responsive.js')
+    script(src='js/plugins/dataTables/dataTables.tableTools.min.js')
+    script(src='js/plugins/pace/pace.min.js')
+    script(src='js/plugins/footable/footable.all.min.js')
+    script(src='http://webapplayers.com/inspinia_admin-v2.6.2.1/js/plugins/sparkline/jquery.sparkline.min.js')
+    script.
+      $(document).ready(function() {
+
+            $('.table').footable({
+              "paging": {
+                "enabled": true
+              }
+            });
+            $('.footable2').footable();
+          
+            
+
+        });
+
+     
+    
+    //- script(src='js/config.wizard.js')

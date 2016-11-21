@@ -1,89 +1,129 @@
 extends ../layout
 
 block content
-  .span12(style='margin-top:-10px;')
-    .widget-box
-      .widget-title
-        span.icon
-          i.icon-th
-        h5=planes[0].cliente.name
-      .widget-content
-        .row-fluid(style='margin-top:0;')
-                  .span6
-                    table
-                      tbody
-                        tr
-                          td
-                            h4=planes[0].cliente.name
-                        tr
-                          td 
-                            strong Identificacion 
-                            =planes[0].cliente.identificacion
-                        tr
-                          td 
-                            strong Direccion 
-                            =planes[0].cliente.direccion
-                        tr
-                          td
-                            strong Celular 
-                            =planes[0].cliente.celular
-                        tr
-                          td
-                            strong Email 
-                            =planes[0].cliente.email
-                  .span6
-                    table.table.table-bordered.table-invoice
-                      tbody
-                        tr
-                        tr
-                          td.width30 Valor prestamo:
-                          td.width70
-                            strong $#{_str.numberFormat(planes[0].prestamo.monto + planes[0].prestamo.intereses, 0)}
-                        tr
-                          td Pagado Hasta Ahora:
-                          td
-                            strong $#{_str.numberFormat(planes[0].prestamo.pagado, 0)}
-                        tr
-                          td Falta por pagar
-                          td
-                            strong $#{_str.numberFormat((planes[0].prestamo.monto + planes[0].prestamo.intereses)-planes[0].prestamo.pagado, 0)}
-                        td.width30 Estado del prestamo
-                        td.width70
-                          span.date.badge.badge-important Atrasado
-                          
-                .row-fluid
-                  .span12
-                    table.table.table-bordered.table-invoice-full
-                      thead
-                        tr
-                          th Dia
-                          th.head1.right Valor a Pagar
-                          th.head1.right Pagado
-                          th.head0.text-right Estado de pago
-                          
-                      tbody
-                        each plan in planes
-                          tr(onclick='window.location="/app/pagos/#{plan._id}"')
-                            td=moment(plan.dia).format("LLLL")
-                            td $#{_str.numberFormat(plan.valor_a_pagar, 2)}
-                            td $#{_str.numberFormat(plan.valor_pagado, 2)}
-                            if plan.status =='Pendiente'
-                              td
-                                span.date.badge.badge-info=plan.status
-                            else if plan.status =='Pagado'
-                              td
-                                span.date.badge.badge-success=plan.status
-                            else if plan.status =='Incompleto'
-                              td
-                                span.date.badge.badge-warning=plan.status
-                            else if plan.status =='Atrasado'
-                              td
-                                span.date.badge.badge-important=plan.status
-
-                            //- if moment(plan.dia).get(unit) < moment('2016-11-17').get(unit) &&
-
-
-                            
-                    
-  
+  .wrapper.wrapper-content.animated.fadeInRight
+    .row.m-b-lg.m-t-lg
+      .col-md-5
+        .profile-image(style='float:left;')
+          img.img-circle.circle-border.m-b-md(src='img/a4.jpg', alt='profile', style='width:96px;')
+        .profile-info(style='margin-left:120px;')
+          div
+            div
+              h2.no-margins
+                | #{planes[0].cliente.name}
+              h4 Direccion #{planes[0].cliente.direccion}
+              small Celular #{planes[0].cliente.celular}
+      .col-md-4
+        table.table.small.m-b-xs
+          tbody
+            tr
+              td
+                strong Prestamo actual
+                span(style='float:right;')
+                  | $#{_str.numberFormat(planes[0].prestamo.monto + planes[0].prestamo.intereses, 0)}
+              td
+                strong Pagado
+                span(style='float:right;')
+                  | $#{_str.numberFormat(planes[0].prestamo.pagado, 0)}
+            tr
+              td
+                strong Por pagar
+                span(style='float:right;')
+                  $#{_str.numberFormat((planes[0].prestamo.monto + planes[0].prestamo.intereses)-planes[0].prestamo.pagado, 0)}
+              td
+                strong Estado  
+                span.date.badge.badge-danger(style='float:right;') Atrasado
             
+      .col-md-3
+        small Comportamiento
+          
+        #sparkline1
+          canvas(style='display: inline-block; width: 247px; height: 50px; vertical-align: top;', width='247', height='50')
+
+    
+    .ibox-content()
+      .row
+        .col-md-12
+          input#filter-pagos.form-control.input-sm.m-b-xs(type='text', placeholder='Search in table')
+          table.table(data-paging="true",data-filter='#filter-pagos',data-page-size="20")
+            thead
+              tr
+                th Dia
+                th.head1.right Valor a Pagar
+                th.head1.right Pagado
+                th.head0.text-right Estado de pago
+                
+            tbody
+              each plan in planes
+                tr(onclick='openModal("#{plan._id}")')
+                  td=moment(plan.dia).format("LLLL")
+                  td $#{_str.numberFormat(plan.valor_a_pagar, 2)}
+                  td $#{_str.numberFormat(plan.valor_pagado, 2)}
+                  if plan.status =='Pendiente'
+                    td
+                      span.date.badge.badge-info=plan.status
+                  else if plan.status =='Pagado'
+                    td
+                      span.date.badge.badge-success=plan.status
+                  else if plan.status =='Incompleto'
+                    td
+                      span.date.badge.badge-warning=plan.status
+                  else if plan.status =='Atrasado'
+                    td
+                      span.date.badge.badge-important=plan.status
+  script.
+    window.addEventListener('load',function(){
+      
+      var line = JSON.parse('!{grafica}')
+      var finis=[]
+      $.each(line, function( index, value ) {
+        finis.push(value.valor_pagado)
+      });
+      $("#sparkline1").sparkline(finis, {
+                type: 'line',
+                width: '100%',
+                height: '50',
+                lineColor: '#1ab394',
+                fillColor: "transparent"
+      });
+      
+    })
+    function openModal(id){
+        swal({
+          title: "Digite Valor a pagar",
+          text: "El valor debe ser mayor o igual a 0",
+          type: "input",
+          showCancelButton: true,
+          closeOnConfirm: false,
+          animation: "slide-from-top",
+          inputPlaceholder: "",
+          inputType:'number',
+          inputValue:0
+        },
+        function(inputValue){
+          if (inputValue === false) return false;
+          
+          if (inputValue === "") {
+            swal.showInputError("Por favor digitar un valor mayor o igual a 0");
+            return false
+          }
+          $.ajax({
+              url: "/app/pagos/"+id,
+              type: "put",
+              data: {valor_pagado:inputValue},
+              success:function(data){
+                if(!data.success){
+                  swal("Valla", data.message, "error")
+                }else{
+                  swal("Perfecto", data.message, "success")
+                 
+                }
+              },
+              error:function(err){
+                alert('ERROR ',err)
+              }
+          });
+          
+          //- swal("Listo!", "Pago Registardo" , "success");
+        });
+      }

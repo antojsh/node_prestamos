@@ -1,22 +1,50 @@
 extends ../layout
 
 block content
-  .span12
-    .widget-box
-      .widget-title
-        span.icon
-          i.icon-th
-        h5 Static table
-      .widget-content.nopadding
-        table.table.table-bordered.table-striped
-          thead
-            tr
-              th Rendering engine
-              th Browser
-              th Platform(s)
-              th Engine version
-              th CSS grade
-          tbody
-            tr.odd.gradeX
-              td Trident
+  .row
+    .col-lg-12
+      .ibox.float-e-margins
+        .ibox-title
+          h5 prestamos
+          .ibox-tools
+            a.collapse-link
+              i.fa.fa-chevron-up
+            a.dropdown-toggle(data-toggle='dropdown', href='#')
+              i.fa.fa-wrench
+            ul.dropdown-menu.dropdown-user
+              li
+                a(href='#') Config option 1
+              li
+                a(href='#') Config option 2
+            a.close-link
+              i.fa.fa-times
+        .ibox-content
+          input#filter.form-control.input-sm.m-b-xs(type='text', placeholder='Search in table')
+          
+          table.table(data-paging="true",data-filter='#filter',data-page-size="20")
+            thead
+              tr
+                th(data-toggle="true") Cliente
+                th(data-breakpoints='xs') Monto
+                th(data-breakpoints='xs') Plazo
+                
+                th(data-breakpoints='xs') Direccion
+                th(data-breakpoints='xs',data-hide="all") Celular
+                th(data-breakpoints='xs',data-hide="all") Identificacion
+                th(data-breakpoints='xs',data-hide="all") Email
+                
+            tbody
+              each prestamo in prestamos
+                tr
+                  td=prestamo.cliente.name
+                  td=prestamo.monto
+                  td=prestamo.plazo
+                  td=prestamo.cliente.direccion
+                  td=prestamo.cliente.direccion
+                  td=prestamo.cliente.celular
+                  td=prestamo.cliente.email
+            tfoot
+              tr
+                td(colspan='7')
+                  ul.pagination.pull-right
            
